@@ -2,18 +2,18 @@
   {
     "guid": "b17a6020-0bdf-4463-912c-cd0d47213233",
     "name": "JellyNomad",
-    "overview": "A Jellyfin plugin that turns selected TV series into an endless, channel-style stream with optional breaks.",
     "description": "A Jellyfin plugin that turns selected TV series into an endless, channel-style stream with optional breaks.",
+    "overview": "Wander you media.",
     "owner": "TDHeath",
     "category": "Other",
     "versions": [
       {
-        "version": "1.0.0",
+        "version": "1.0.0.0",
         "changelog": "Initial Release",
         "targetAbi": "10.9.0.0",
         "sourceUrl": "https://github.com/tdheath/JellyNomad/releases/download/v1.0.0/JellyNomad.zip",
-        "timestamp": "2026-07-12T00:00:00Z",
-        "checksum": "731DF18D86F8D53BD537164E7A7B9982"
+        "checksum": "731DF18D86F8D53BD537164E7A7B9982",
+        "timestamp": "2026-07-12T00:00:00Z"
       }
     ]
   }
