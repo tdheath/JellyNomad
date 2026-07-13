@@ -1,0 +1,22 @@
+{
+  "Version": "1.0",
+  "Name": "JellyNomad",
+  "RepositoryName": "JellyNomad",
+  "RepositoryUrl": "https://github.com/your-user/JellyNomad",
+  "Description": "Community plugin repository for JellyNomad.",
+  "Plugins": [
+    {
+      "Name": "Nomad",
+      "Guid": "b17a6020-0bdf-4463-912c-cd0d47213233",
+      "Version": "1.0.0",
+      "Description": "JellyNomad provides a classic TV-like experience fully contained within a Jellyfin instance.",
+      "Overview": "A Jellyfin plugin that turns selected TV series into an endless, channel-style stream with optional breaks.",
+      "Owner": "Tracey",
+      "Category": "General",
+      "TargetAbi": "10.9.0.0",
+      "Timestamp": "2026-07-12T00:00:00.0000000Z",
+      "ArtifactName": "JellyNomad-1.0.0.zip",
+      "DownloadUrl": "https://github.com/your-user/JellyNomad/releases/download/v1.0.0/JellyNomad-1.0.0.zip"
+    }
+  ]
+}
