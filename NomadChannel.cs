@@ -56,12 +56,12 @@ public class NomadChannel : IChannel
         }
 
         var assembly = typeof(NomadChannel).Assembly;
-        var stream = assembly.GetManifestResourceStream("JellyNomad.Images.channel-icon.png");
+        var stream = assembly.GetManifestResourceStream("JellyNomad.Images.nomad-icon.png");
 
         if (stream is null)
         {
             _logger.LogWarning(
-                "[NomadChannel] channel-icon.png not found. Available resources: {Resources}",
+                "[NomadChannel] nomad-icon.png not found. Available resources: {Resources}",
                 string.Join(", ", assembly.GetManifestResourceNames()));
             return Task.FromResult(new DynamicImageResponse { HasImage = false });
         }

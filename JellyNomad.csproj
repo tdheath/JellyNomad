@@ -41,8 +41,8 @@
   <ItemGroup>
     <None Remove="Configuration\configPage.html" />
     <EmbeddedResource Include="Configuration\configPage.html" />
-    <None Remove="Images\channel-icon.png" />
-    <EmbeddedResource Include="Images\channel-icon.png" />
+    <None Remove="Images\nomad-icon.png" />
+    <EmbeddedResource Include="Images\nomad-icon.png" />
   </ItemGroup>
 
 </Project>
