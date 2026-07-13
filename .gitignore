@@ -1,0 +1,17 @@
+# Local tooling and build outputs
+.claude/
+build/
+Build/
+
+# .NET / IDE artifacts
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+*.db

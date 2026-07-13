@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>JellyNomad</title>
+</head>
+
+<body>
+    <div id="NomadConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage"
+        data-require="emby-input,emby-button,emby-select,emby-checkbox">
+        <style>
+            .series-tile {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5em;
+                padding: 0.35em 0.6em 0.35em 0.8em;
+                background: rgba(255, 255, 255, 0.07);
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                border-radius: 4px;
+            }
+
+            .series-tile-name {
+                font-size: 0.9em;
+            }
+
+            .series-tile-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.5em;
+                height: 1.5em;
+                min-width: unset;
+                padding: 0;
+                border-radius: 50%;
+                border: none;
+                background: transparent;
+                font-size: 1em;
+                font-weight: bold;
+                line-height: 1;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: background 0.15s;
+            }
+
+            .series-tile-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .series-tile-btn-add {
+                color: #4caf50;
+            }
+
+            .series-tile-btn-remove {
+                color: #f44336;
+            }
+
+            .series-tiles-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5em;
+                padding: 0.75em;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
+                margin-top: 0.5em;
+                min-height: 3.5em;
+                align-content: flex-start;
+            }
+
+            #availableTiles {
+                max-height: 260px;
+                overflow-y: auto;
+            }
+
+            .series-tiles-empty {
+                font-size: 0.85em;
+                opacity: 0.5;
+                align-self: center;
+            }
+
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type="number"] {
+                -moz-appearance: textfield;
+                appearance: textfield;
+            }
+
+            .step-input-wrapper {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5em;
+            }
+
+            .step-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 1.8em;
+                height: 1.8em;
+                border-radius: 50%;
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                background: rgba(255, 255, 255, 0.07);
+                color: inherit;
+                font-size: 1em;
+                font-weight: bold;
+                cursor: pointer;
+                flex-shrink: 0;
+                transition: background 0.15s;
+            }
+
+            .step-btn:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            .btn-danger.emby-button {
+                color: #f44336;
+                border: 1px solid rgba(244, 67, 54, 0.5);
+                background: transparent;
+            }
+
+            .btn-danger.emby-button:hover {
+                background: rgba(244, 67, 54, 0.1);
+            }
+
+            .btn-secondary.emby-button {
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                background: rgba(255, 255, 255, 0.07);
+            }
+
+            .btn-secondary.emby-button:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+
+            .channel-image-preview {
+                width: 88px;
+                height: 88px;
+                border: 1px solid rgba(255, 255, 255, 0.35);
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.07);
+                overflow: hidden;
+            }
+
+            .channel-image-preview img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .channel-image-placeholder {
+                font-size: 0.8em;
+                opacity: 0.5;
+                text-align: center;
+                padding: 0.5em;
+            }
+
+            .section-separator {
+                border-top: 1px solid rgba(255, 255, 255, 0.15);
+                margin-top: 1.25em;
+                padding-top: 1em;
+            }
+        </style>
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="NomadConfigurationForm">
+
+                    <div class="verticalSection">
+                        <h1 class="sectionTitle">Global Settings</h1>
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="commercialsPath">Commercials Path</label>
+                            <input id="commercialsPath" type="text" is="emby-input" />
+                            <div class="fieldDescription">Folder containing commercial video files. Used by channels
+                                with Commercials enabled.</div>
+                        </div>
+                    </div>
+
+                    <div class="verticalSection">
+                        <h1 class="sectionTitle">Channels</h1>
+
+                        <div class="selectContainer">
+                            <label class="selectLabel" for="channelSelect">Channel</label>
+                            <select is="emby-select" id="channelSelect" class="emby-select-withcolor emby-select">
+                                <option value="">Select a channel&#8230;</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-top:0.75em; display:flex; gap:0.5em; flex-wrap:wrap;">
+                            <button type="button" is="emby-button" class="raised emby-button" id="btnNewChannel">
+                                <span>New Channel</span>
+                            </button>
+                            <button type="button" is="emby-button" class="emby-button btn-danger" id="btnDeleteChannel"
+                                style="display:none;">
+                                <span>Delete Channel</span>
+                            </button>
+                        </div>
+
+                        <div id="newChannelForm" style="display:none; margin-top:1em;">
+                            <div class="inputContainer">
+                                <label class="inputLabel inputLabelUnfocused" for="newChannelName">Channel Name</label>
+                                <input id="newChannelName" type="text" is="emby-input" />
+                            </div>
+                            <div style="display:flex; gap:0.5em; margin-top:0.5em;">
+                                <button type="button" is="emby-button" class="raised emby-button" id="btnCreateChannel">
+                                    <span>Create</span>
+                                </button>
+                                <button type="button" is="emby-button" class="emby-button btn-secondary"
+                                    id="btnCancelNewChannel">
+                                    <span>Cancel</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="channelConfig" style="display:none;">
+
+                        <div class="verticalSection">
+                            <h2 class="sectionTitle section-separator">Appearance</h2>
+
+                            <div class="inputContainer">
+                                <label class="inputLabel">Channel Image</label>
+                                <div class="channel-image-preview" id="channelImagePreview">
+                                    <span class="channel-image-placeholder">No image</span>
+                                </div>
+                                <div style="display:flex; gap:0.5em; margin-top:0.5em;">
+                                    <button type="button" is="emby-button" class="raised emby-button"
+                                        id="btnUploadImage">
+                                        <span>Upload Image</span>
+                                    </button>
+                                    <button type="button" is="emby-button" class="emby-button btn-secondary"
+                                        id="btnRemoveImage" style="display:none;">
+                                        <span>Remove</span>
+                                    </button>
+                                </div>
+                                <input type="file" id="channelImageInput" accept="image/*" style="display:none;" />
+                                <div class="fieldDescription">Optional icon or thumbnail for this channel.</div>
+                            </div>
+
+                                <h2 class="sectionTitle section-separator">Breaks</h2>
+
+                                <div class="checkboxContainer checkboxContainer-withDescription">
+                                    <label class="emby-checkbox-label">
+                                        <input id="allowCommercials" name="allowCommercials" type="checkbox"
+                                            is="emby-checkbox" />
+                                        <span>Commercials</span>
+                                    </label>
+                                    <div class="fieldDescription checkboxFieldDescription">Include commercial breaks
+                                        between episodes.</div>
+                                </div>
+
+                                <div class="checkboxContainer checkboxContainer-withDescription">
+                                    <label class="emby-checkbox-label">
+                                        <input id="allowTrailers" name="allowTrailers" type="checkbox"
+                                            is="emby-checkbox" />
+                                        <span>Trailers</span>
+                                    </label>
+                                    <div class="fieldDescription checkboxFieldDescription">Include trailers between
+                                        episodes.</div>
+                                </div>
+
+                                <div class="selectContainer">
+                                    <label class="selectLabel" for="maxTrailerRating">Max Trailer Rating</label>
+                                    <select is="emby-select" id="maxTrailerRating"
+                                        class="emby-select-withcolor emby-select">
+                                        <option value="">Any</option>
+                                        <option value="G">G</option>
+                                        <option value="PG">PG</option>
+                                        <option value="PG-13">PG-13</option>
+                                        <option value="R">R</option>
+                                        <option value="NC-17">NC-17</option>
+                                    </select>
+                                    <div class="fieldDescription">Only include trailers at or below this rating.</div>
+                                </div>
+
+                                <div class="inputContainer">
+                                    <label class="inputLabel inputLabelUnfocused" for="episodesPerBreak">Episodes per
+                                        Break</label>
+                                    <div class="step-input-wrapper">
+                                        <button type="button" class="step-btn" data-target="episodesPerBreak"
+                                            data-step="-1">&#8722;</button>
+                                        <input id="episodesPerBreak" name="episodesPerBreak" type="number"
+                                            is="emby-input" min="1" step="1" />
+                                        <button type="button" class="step-btn" data-target="episodesPerBreak"
+                                            data-step="1">+</button>
+                                    </div>
+                                    <div class="fieldDescription">How many episodes play before a break is inserted.
+                                    </div>
+                                </div>
+                                <div class="inputContainer">
+                                    <label class="inputLabel inputLabelUnfocused" for="breakItemCount">Items per
+                                        Break</label>
+                                    <div class="step-input-wrapper">
+                                        <button type="button" class="step-btn" data-target="breakItemCount"
+                                            data-step="-1">&#8722;</button>
+                                        <input id="breakItemCount" name="breakItemCount" type="number" is="emby-input"
+                                            min="1" step="1" />
+                                        <button type="button" class="step-btn" data-target="breakItemCount"
+                                            data-step="1">+</button>
+                                    </div>
+                                    <div class="fieldDescription">Number of commercials or trailers to play per break.
+                                    </div>
+                                </div>
+
+                                <div class="inputContainer">
+                                    <label class="inputLabel inputLabelUnfocused" for="hoursBetweenRepeat">Hours Between
+                                        Repeat</label>
+                                    <div class="step-input-wrapper">
+                                        <button type="button" class="step-btn" data-target="hoursBetweenRepeat"
+                                            data-step="-1">&#8722;</button>
+                                        <input id="hoursBetweenRepeat" name="hoursBetweenRepeat" type="number"
+                                            is="emby-input" min="0" step="1" />
+                                        <button type="button" class="step-btn" data-target="hoursBetweenRepeat"
+                                            data-step="1">+</button>
+                                    </div>
+                                    <div class="fieldDescription">Minimum hours before a previously played item can
+                                        repeat.</div>
+                                </div>
+
+                                <div class="inputContainer">
+                                    <label class="inputLabel inputLabelUnfocused"
+                                        for="successiveEpisodesAllowed">Successive Episodes Allowed</label>
+                                    <div class="step-input-wrapper">
+                                        <button type="button" class="step-btn" data-target="successiveEpisodesAllowed"
+                                            data-step="-1">&#8722;</button>
+                                        <input id="successiveEpisodesAllowed" name="successiveEpisodesAllowed"
+                                            type="number" is="emby-input" min="1" step="1" />
+                                        <button type="button" class="step-btn" data-target="successiveEpisodesAllowed"
+                                            data-step="1">+</button>
+                                    </div>
+                                    <div class="fieldDescription">Maximum number of episodes from the same series that
+                                        can play back-to-back.</div>
+                                </div>
+                                <h2 class="sectionTitle section-separator">Content</h2>
+                                <div class="verticalSection">
+                                    <div class="fieldDescription">Select the series to include in your channel.</div>
+
+                                    <div style="margin-top:1em;">
+                                        <h3 class="inputLabel">Available Series</h3>
+                                        <div id="availableTiles" class="series-tiles-container">
+                                            <span class="series-tiles-empty">Loading&#8230;</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top:1.25em;">
+                                        <h3 class="inputLabel">Selected Series</h3>
+                                        <div id="selectedTiles" class="series-tiles-container">
+                                            <span class="series-tiles-empty">None selected.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button" style="margin-top:1.5em;">
+                            <span>Save</span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var NomadConfig = {
+                pluginUniqueId: 'b17a6020-0bdf-4463-912c-cd0d47213233'
+            };
+
+            var channels = [];
+            var currentChannelId = null;
+            var currentChannelImage = null;
+            var allSeries = []; 
+            var availableSeries = [];
+            var selectedSeries = [];
+
+            // --- Channel image ---
+            function updateImagePreview(base64) {
+                var preview = document.querySelector('#channelImagePreview');
+                var btnRemove = document.querySelector('#btnRemoveImage');
+                preview.innerHTML = '';
+                if (base64) {
+                    var img = document.createElement('img');
+                    img.src = base64;
+                    img.alt = 'Channel image';
+                    preview.appendChild(img);
+                    btnRemove.style.display = '';
+                } else {
+                    var placeholder = document.createElement('span');
+                    placeholder.className = 'channel-image-placeholder';
+                    placeholder.textContent = 'No image';
+                    preview.appendChild(placeholder);
+                    btnRemove.style.display = 'none';
+                }
+            }
+
+            document.querySelector('#btnUploadImage').addEventListener('click', function () {
+                document.querySelector('#channelImageInput').click();
+            });
+
+            document.querySelector('#channelImageInput').addEventListener('change', function () {
+                var file = this.files[0];
+                if (!file) return;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    currentChannelImage = e.target.result;
+                    updateImagePreview(currentChannelImage);
+                };
+                reader.readAsDataURL(file);
+                this.value = '';
+            });
+
+            document.querySelector('#btnRemoveImage').addEventListener('click', function () {
+                currentChannelImage = null;
+                updateImagePreview(null);
+            });
+
+            // --- Step buttons ---
+            document.querySelectorAll('.step-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var input = document.getElementById(btn.dataset.target);
+                    if (parseInt(btn.dataset.step, 10) > 0) {
+                        input.stepUp();
+                    } else {
+                        input.stepDown();
+                    }
+                });
+            });
+
+            // --- Series tiles ---
+            function createTile(name, btnLabel, onClick) {
+                var tile = document.createElement('div');
+                tile.className = 'series-tile';
+
+                var nameSpan = document.createElement('span');
+                nameSpan.className = 'series-tile-name';
+                nameSpan.textContent = name;
+
+                var btn = document.createElement('button');
+                btn.className = 'series-tile-btn ' + (btnLabel === '+' ? 'series-tile-btn-add' : 'series-tile-btn-remove');
+                btn.type = 'button';
+                btn.textContent = btnLabel;
+                btn.title = (btnLabel === '+' ? 'Add ' : 'Remove ') + name;
+                btn.addEventListener('click', onClick);
+
+                tile.appendChild(nameSpan);
+                tile.appendChild(btn);
+                return tile;
+            }
+
+            function renderAvailableTiles() {
+                var container = document.querySelector('#availableTiles');
+                container.innerHTML = '';
+                if (availableSeries.length === 0) {
+                    var empty = document.createElement('span');
+                    empty.className = 'series-tiles-empty';
+                    empty.textContent = allSeries.length === 0 ? 'No series found.' : 'All series selected.';
+                    container.appendChild(empty);
+                    return;
+                }
+                availableSeries.forEach(function (s) {
+                    container.appendChild(createTile(s.name, '+', function () { addSeries(s.id); }));
+                });
+            }
+
+            function renderSelectedTiles() {
+                var container = document.querySelector('#selectedTiles');
+                container.innerHTML = '';
+                if (selectedSeries.length === 0) {
+                    var empty = document.createElement('span');
+                    empty.className = 'series-tiles-empty';
+                    empty.textContent = 'None selected.';
+                    container.appendChild(empty);
+                    return;
+                }
+                selectedSeries.forEach(function (s) {
+                    container.appendChild(createTile(s.name, '✕', function () { removeSeries(s.id); }));
+                });
+            }
+
+            function addSeries(id) {
+                var idx = availableSeries.findIndex(function (s) { return s.id === id; });
+                if (idx === -1) return;
+                selectedSeries.push(availableSeries[idx]);
+                availableSeries.splice(idx, 1);
+                renderAvailableTiles();
+                renderSelectedTiles();
+            }
+
+            function removeSeries(id) {
+                var idx = selectedSeries.findIndex(function (s) { return s.id === id; });
+                if (idx === -1) return;
+                availableSeries.push(selectedSeries[idx]);
+                availableSeries.sort(function (a, b) { return a.name.localeCompare(b.name); });
+                selectedSeries.splice(idx, 1);
+                renderAvailableTiles();
+                renderSelectedTiles();
+            }
+
+            // --- Channel management ---
+            function generateId() {
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+            }
+
+            function populateChannelSelect() {
+                var select = document.querySelector('#channelSelect');
+                while (select.options.length > 1) select.remove(1);
+                channels.forEach(function (ch) {
+                    var opt = document.createElement('option');
+                    opt.value = ch.Id;
+                    opt.text = ch.Name;
+                    select.add(opt);
+                });
+            }
+
+            function captureCurrentChannel() {
+                if (!currentChannelId) return;
+                var ch = channels.find(function (c) { return c.Id === currentChannelId; });
+                if (!ch) return;
+                ch.ChannelImage = currentChannelImage || '';
+                ch.AllowCommercials = document.querySelector('#allowCommercials').checked;
+                ch.AllowTrailers = document.querySelector('#allowTrailers').checked;
+                ch.MaxTrailerRating = document.querySelector('#maxTrailerRating').value || null;
+                ch.EpisodesPerBreak = parseInt(document.querySelector('#episodesPerBreak').value, 10) || 1;
+                ch.BreakItemCount = parseInt(document.querySelector('#breakItemCount').value, 10) || 1;
+                ch.HoursBetweenRepeat = parseInt(document.querySelector('#hoursBetweenRepeat').value, 10) || 0;
+                ch.SuccessiveEpisodesAllowed = parseInt(document.querySelector('#successiveEpisodesAllowed').value, 10) || 1;
+                ch.SelectedSeriesIds = selectedSeries.map(function (s) { return s.id; });
+                ch.SelectedSeriesNames = selectedSeries.map(function (s) { return s.name; });
+            }
+
+            function loadChannel(channelId) {
+                captureCurrentChannel();
+                currentChannelId = channelId || null;
+
+                var configEl = document.querySelector('#channelConfig');
+                var btnDelete = document.querySelector('#btnDeleteChannel');
+
+                if (!channelId) {
+                    configEl.style.display = 'none';
+                    btnDelete.style.display = 'none';
+                    return;
+                }
+
+                var ch = channels.find(function (c) { return c.Id === channelId; });
+                if (!ch) return;
+
+                currentChannelImage = ch.ChannelImage || null;
+                updateImagePreview(currentChannelImage);
+                document.querySelector('#allowCommercials').checked = ch.AllowCommercials || false;
+                document.querySelector('#allowTrailers').checked = ch.AllowTrailers || false;
+                document.querySelector('#maxTrailerRating').value = ch.MaxTrailerRating || '';
+                document.querySelector('#episodesPerBreak').value = ch.EpisodesPerBreak || 1;
+                document.querySelector('#breakItemCount').value = ch.BreakItemCount || 1;
+                document.querySelector('#hoursBetweenRepeat').value = ch.HoursBetweenRepeat || 0;
+                document.querySelector('#successiveEpisodesAllowed').value = ch.SuccessiveEpisodesAllowed || 1;
+
+                var ids = ch.SelectedSeriesIds || [];
+                var names = ch.SelectedSeriesNames || [];
+                selectedSeries = ids.map(function (id, i) { return { id: id, name: names[i] || id }; });
+                availableSeries = allSeries.filter(function (s) { return ids.indexOf(s.id) === -1; });
+
+                renderSelectedTiles();
+                renderAvailableTiles();
+
+                configEl.style.display = '';
+                btnDelete.style.display = '';
+            }
+
+            document.querySelector('#channelSelect').addEventListener('change', function () {
+                document.querySelector('#newChannelForm').style.display = 'none';
+                loadChannel(this.value);
+            });
+
+            document.querySelector('#btnNewChannel').addEventListener('click', function () {
+                document.querySelector('#channelSelect').value = '';
+                loadChannel(null);
+                document.querySelector('#newChannelForm').style.display = '';
+                document.querySelector('#newChannelName').value = '';
+                document.querySelector('#newChannelName').focus();
+            });
+
+            document.querySelector('#btnCancelNewChannel').addEventListener('click', function () {
+                document.querySelector('#newChannelForm').style.display = 'none';
+            });
+
+            document.querySelector('#btnCreateChannel').addEventListener('click', function () {
+                var name = document.querySelector('#newChannelName').value.trim();
+                if (!name) return;
+                var ch = {
+                    Id: generateId(),
+                    Name: name,
+                    ChannelImage: '',
+                    AllowCommercials: false,
+                    AllowTrailers: false,
+                    MaxTrailerRating: null,
+                    EpisodesPerBreak: 1,
+                    BreakItemCount: 1,
+                    HoursBetweenRepeat: 0,
+                    SuccessiveEpisodesAllowed: 1,
+                    SelectedSeriesIds: [],
+                    SelectedSeriesNames: []
+                };
+                channels.push(ch);
+                populateChannelSelect();
+                document.querySelector('#channelSelect').value = ch.Id;
+                document.querySelector('#newChannelForm').style.display = 'none';
+                loadChannel(ch.Id);
+            });
+
+            document.querySelector('#btnDeleteChannel').addEventListener('click', function () {
+                var ch = channels.find(function (c) { return c.Id === currentChannelId; });
+                if (!ch || !confirm('Delete channel "' + ch.Name + '"?')) return;
+                channels = channels.filter(function (c) { return c.Id !== currentChannelId; });
+                currentChannelId = null;
+                populateChannelSelect();
+                document.querySelector('#channelSelect').value = '';
+                loadChannel(null);
+            });
+
+            // --- Page load ---
+            document.querySelector('#NomadConfigurationPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                Promise.all([
+                    ApiClient.getItems(ApiClient.getCurrentUserId(), {
+                        IncludeItemTypes: 'Series',
+                        Recursive: true,
+                        SortBy: 'SortName',
+                        SortOrder: 'Ascending'
+                    }),
+                    ApiClient.getPluginConfiguration(NomadConfig.pluginUniqueId)
+                ]).then(function (results) {
+                    allSeries = (results[0].Items || []).map(function (item) {
+                        return { id: item.Id, name: item.Name };
+                    });
+                    document.querySelector('#commercialsPath').value = results[1].CommercialsPath || '';
+                    channels = (results[1].Channels || []).map(function (ch) {
+                        return {
+                            Id: ch.Id || generateId(),
+                            Name: ch.Name || 'Unnamed',
+                            ChannelImage: ch.ChannelImage || '',
+                            AllowCommercials: ch.AllowCommercials || false,
+                            AllowTrailers: ch.AllowTrailers || false,
+                            MaxTrailerRating: ch.MaxTrailerRating || null,
+                            EpisodesPerBreak: ch.EpisodesPerBreak || 1,
+                            BreakItemCount: ch.BreakItemCount || 1,
+                            HoursBetweenRepeat: ch.HoursBetweenRepeat || 0,
+                            SuccessiveEpisodesAllowed: ch.SuccessiveEpisodesAllowed || 1,
+                            SelectedSeriesIds: ch.SelectedSeriesIds || [],
+                            SelectedSeriesNames: ch.SelectedSeriesNames || []
+                        };
+                    });
+                    populateChannelSelect();
+                    Dashboard.hideLoadingMsg();
+                }).catch(function () {
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            // --- Save ---
+            document.querySelector('#NomadConfigurationForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                captureCurrentChannel();
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(NomadConfig.pluginUniqueId).then(function (config) {
+                    config.CommercialsPath = document.querySelector('#commercialsPath').value.trim();
+                    config.Channels = channels;
+                    return ApiClient.updatePluginConfiguration(NomadConfig.pluginUniqueId, config);
+                }).then(function (result) {
+                    //Try to force a refresh to clean out any deleted channels or data
+                    ApiClient.ajax({ type: 'POST', url: ApiClient.getUrl('Library/Refresh') })
+                        .catch(function () { /* non-critical */ });
+                    Dashboard.processPluginConfigurationUpdateResult(result);
+                });
+            });
+        </script>
+    </div>
+</body>
+
+</html>
