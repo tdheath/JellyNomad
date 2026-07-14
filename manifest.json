@@ -8,10 +8,10 @@
     "category": "General",
     "versions": [
       {
-        "version": "1.0.0.0",
+        "version": "10.11.2.0",
         "changelog": "Initial Release",
         "targetAbi": "10.11.2.0",
-        "sourceUrl": "https://github.com/tdheath/JellyNomad/releases/download/v1.0.0.0/JellyNomad_v1.0.0.0.zip",
+        "sourceUrl": "https://github.com/tdheath/JellyNomad/releases/download/v10.11.2.0/JellyNomad_v10.11.2.0.zip",
         "checksum": "91DC0F548836B3A549EFEF002CA08E8C",
         "timestamp": "2026-07-12T00:00:00Z"
       }
