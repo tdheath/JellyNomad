@@ -10,32 +10,10 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
-  <!-- Reference DLLs directly from the Jellyfin installation to guarantee version compatibility. -->
   <ItemGroup>
-    <Reference Include="MediaBrowser.Common">
-      <HintPath>C:\Program Files\Jellyfin\Server\MediaBrowser.Common.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="MediaBrowser.Controller">
-      <HintPath>C:\Program Files\Jellyfin\Server\MediaBrowser.Controller.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="MediaBrowser.Model">
-      <HintPath>C:\Program Files\Jellyfin\Server\MediaBrowser.Model.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Jellyfin.Data">
-      <HintPath>C:\Program Files\Jellyfin\Server\Jellyfin.Data.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <HintPath>C:\Program Files\Jellyfin\Server\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>C:\Program Files\Jellyfin\Server\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
+    <PackageReference Include="Jellyfin.Controller" Version="10.11.2" />
+    <PackageReference Include="Jellyfin.Model" Version="10.11.2" />
+    <PackageReference Include="Jellyfin.Data" Version="10.11.2" />
   </ItemGroup>
 
   <ItemGroup>
